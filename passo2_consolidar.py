@@ -1,3 +1,27 @@
+# Passo 2 — Leitura e consolidação dos CSVs em um único DataFrame
+#
+# Cada arquivo finbra.csv segue o padrão brasileiro do Siconfi, com algumas
+# particularidades que precisam ser tratadas explicitamente:
+#
+#   - encoding="latin-1": o arquivo usa ISO-8859-1; abrir como UTF-8
+#     transforma acentos em caracteres inválidos (ex.: "Saúde" → "Sa?de").
+#   - sep=";": o separador de colunas é ponto e vírgula, não vírgula.
+#   - decimal=",": valores monetários usam vírgula decimal (padrão BR).
+#   - thousands=".": ponto como separador de milhar em alguns campos.
+#   - skiprows=3: as 3 primeiras linhas são metadados do Siconfi
+#     (Exercício, Escopo, Tabela) e precisam ser ignoradas na leitura.
+#
+# Após a leitura, o ano é adicionado como coluna — informação derivada da
+# pasta de origem, não presente no CSV em si.
+#
+# A coluna tipo_conta classifica cada linha da coluna Conta em:
+#   - "funcao"   → formato "XX - Nome" (2 dígitos + traço), ex.: "10 - Saúde"
+#   - "subfuncao"→ formato "XX.YYY",                        ex.: "10.301 - ..."
+#   - "total"    → linhas agregadas como "Despesas Exceto Intraorçamentárias"
+#
+# Essa classificação é essencial para evitar dupla contagem nas análises:
+# somar funções e subfunções juntas contaria o mesmo valor duas vezes.
+
 from pathlib import Path
 import re
 import pandas as pd

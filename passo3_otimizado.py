@@ -1,3 +1,22 @@
+# Passo 3 — Geração de formato otimizado e base de consulta performática
+#
+# Escolha da abordagem: Parquet + DuckDB
+#
+# O Parquet (gerado no Passo 2) é um formato colunar e comprimido que lê
+# muito mais rápido do que CSV — especialmente em consultas que filtram
+# por colunas específicas (ex.: só "Despesas Pagas"), pois não precisa
+# carregar colunas irrelevantes.
+#
+# O DuckDB complementa o Parquet como motor de consulta SQL analítico
+# embutido: não exige instalação de servidor, roda no próprio computador
+# e consulta arquivos Parquet diretamente com SQL completo. Para análises
+# de dados públicos de escala média (dezenas de milhares de linhas),
+# DuckDB oferece desempenho muito superior ao pandas puro e é reproduzível
+# sem qualquer configuração de infraestrutura.
+#
+# Este script cria a base finbra.duckdb a partir do Parquet consolidado
+# e imprime um diagnóstico dos dados para validação.
+
 import duckdb
 
 con = duckdb.connect("finbra.duckdb")

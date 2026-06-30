@@ -1,3 +1,12 @@
+# Passo 1 — Descompactação dos arquivos ZIP
+#
+# Os dados do Siconfi vêm compactados em arquivos .zip organizados por ano
+# dentro de dados_compactos/. Este script percorre toda a pasta recursivamente,
+# encontra cada .zip e extrai o conteúdo para dados_extraidos/<ano>/.
+#
+# A pasta de destino é criada automaticamente caso não exista.
+# O ano é inferido pelo nome da pasta pai de cada arquivo zip.
+
 from pathlib import Path
 import zipfile
 
